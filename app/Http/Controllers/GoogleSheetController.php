@@ -27,14 +27,14 @@ class GoogleSheetController extends Controller
 
         $appeal = Appeal::create($validatedData);
 
-        // $googleSheetLink = $this->generateLink($appeal);
+        $googleSheetLink = $this->generateLink($appeal);
 
-        // $appeal->update(['link' => $googleSheetLink]);
+        $appeal->update(['link' => $googleSheetLink]);
 
         return redirect('/')->with('message', 'Ваша заявка успешно отправлена.');
     }
 
-    public function generateLink()
+    public function generateLink($appeal)
     {
         $client = new Client();
         $client->setApplicationName('Google Sheets API Laravel');
@@ -42,21 +42,21 @@ class GoogleSheetController extends Controller
         $client->setAuthConfig(storage_path('app/google/credentials.json'));
         $client->setAccessType('offline');
 
-        $tokenPath = storage_path('app/google/token.json');
-        if (Storage::exists('google/token.json')) {
-            $accessToken = json_decode(Storage::get('google/token.json'), true);
-            $client->setAccessToken($accessToken);
-        }
+        // $tokenPath = storage_path('app/google/token.json');
+        // if (Storage::exists('google/token.json')) {
+        //     $accessToken = json_decode(Storage::get('google/token.json'), true);
+        //     $client->setAccessToken($accessToken);
+        // }
 
-        if ($client->isAccessTokenExpired()) {
-            if ($client->getRefreshToken()) {
-                $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-                Storage::put('google/token.json', json_encode($client->getAccessToken()));
-            } else {
-                $authUrl = $client->createAuthUrl();
-                return redirect($authUrl);
-            }
-        }
+        // if ($client->isAccessTokenExpired()) {
+        //     if ($client->getRefreshToken()) {
+        //         $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
+        //         Storage::put('google/token.json', json_encode($client->getAccessToken()));
+        //     } else {
+        //         $authUrl = $client->createAuthUrl();
+        //         return redirect($authUrl);
+        //     }
+        // }
 
         $sheetsService = new Sheets($client);
 
@@ -74,7 +74,7 @@ class GoogleSheetController extends Controller
 
         // Add data to the spreadsheet
         $values = [
-            ['test title', 'description'],
+            [$appeal->name, $appeal->surname, $appeal->phone, $appeal->message],
         ];
 
         $body = new Sheets\ValueRange([
@@ -85,7 +85,7 @@ class GoogleSheetController extends Controller
             'valueInputOption' => 'RAW'
         ];
 
-        $range = 'Sheet1!A1:B1';
+        $range = 'Sheet1!A1:D1';
         $sheetsService->spreadsheets_values->update($spreadsheetId, $range, $body, $params);
 
         // Set up Google Drive Service

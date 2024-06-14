@@ -43,7 +43,14 @@ const props = defineProps({
             <td class="px-6 py-4">{{ appeal.name }}</td>
             <td class="px-6 py-4">{{ appeal.surname }}</td>
             <td class="px-6 py-4">{{ appeal.phone }}</td>
-            <td class="px-6 py-4">{{ appeal.link }}</td>
+            <td class="px-6 py-4">
+              <a
+                :href="appeal.link"
+                target="_blank"
+                class="text-blue-500 underline hover:no-underline"
+                >{{ appeal.link }}</a
+              >
+            </td>
           </tr>
         </tbody>
       </table>

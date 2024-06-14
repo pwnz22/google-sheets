@@ -44,6 +44,14 @@ import { Link } from '@inertiajs/vue3';
         </svg>
         Отправить заново
       </Link>
+      <Link
+        href="/appeals"
+        type="button"
+        class="text-blue-800 bg-transparent border border-blue-800 hover:bg-blue-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-200 font-medium rounded-lg text-xs px-3 py-1.5 text-center"
+        aria-label="Close"
+      >
+        Посмотреть заявки
+      </Link>
     </div>
   </div>
 </template>
